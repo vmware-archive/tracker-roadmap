@@ -6,7 +6,10 @@ ALL_PROJECTS = Project.all(:params => {:fields => "id,name"})
 p ALL_PROJECTS
 
 dest_project = Project.find(PROJECT_ID)
-dest_project.stories.reject { |s| s.current_state == "unscheduled" }.map(&:destroy)
+stories_to_delete = dest_project.stories.reject { |s| s.current_state == "unscheduled" }
+puts "About to delete #{stories_to_delete.length} non-icebox stories from project #{PROJECT_ID}, okay (y/n)?"
+raise "User aborted" unless gets.strip == "y"
+stories_to_delete.map(&:destroy)
 epics = dest_project.epics
 p epics
 

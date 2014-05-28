@@ -53,7 +53,9 @@ epics.each do |epic|
             dest_story.story_type = src_story.story_type
             if src_story.respond_to?(:estimate)
               dest_story.estimate = src_story.estimate
-              dest_story.estimate = 5 if dest_story.estimate == 4
+              dest_story.estimate = 5 if dest_story.estimate == 4 || dest_story.estimate == 6 || dest_story.estimate == 7
+              dest_story.estimate = [dest_story.estimate, 8].min
+              dest_story.estimate = [dest_story.estimate, 0].max
             end
             dest_story.current_state = src_story.current_state
             dest_story.accepted_at = src_story.accepted_at if dest_story.current_state == "accepted"

@@ -44,7 +44,6 @@ epics.each do |epic|
 
         puts "\n----- Processing #{src_stories.select.count} stories for label '#{label}' from #{src_proj.name}: ----"
         src_stories.each do |src_story|
-          #if src_story.current_state != "unscheduled" && src_story.story_type == "feature" || src.current_state != "unscheduled" && ARGV[1] == "-a"
           if src_story.current_state != "unscheduled" && (src_story.story_type == "feature" || ARGV[0] == "-a")
             pp src_story
             dest_story = dest_stories.detect { |s| s.name == src_story.name }

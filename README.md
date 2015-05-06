@@ -23,7 +23,7 @@ In the second example, the backlog names can contain either `Runtime` or `Servic
 
 The tool stops when it reaches an epic that begins with `__`, such as `__My release 1.2__`
 
-The roadmap tracker project is required to have a Fibonacci pointing scale. 
+The roadmap tracker project is required to have a Fibonacci pointing scale.
 
 Additionally you need to configure a 3rd party "Other Integration" on your project named `Tracker`
 with the Base URL of `http://www.pivotaltracker.com/story/show/`.

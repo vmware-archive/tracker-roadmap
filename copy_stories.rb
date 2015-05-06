@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
 require File.expand_path("setup")
+require 'pp'
 
 ALL_PROJECTS = Project.all(:params => {:fields => "id,name"})
 p ALL_PROJECTS
@@ -8,7 +9,7 @@ p ALL_PROJECTS
 dest_project = Project.find(PROJECT_ID)
 stories_to_delete = dest_project.stories.reject { |s| s.current_state == "unscheduled" }
 puts "About to delete #{stories_to_delete.length} non-icebox stories from project #{PROJECT_ID}, okay (y/n)?"
-raise "User aborted" unless gets.strip == "y"
+raise "User aborted" unless STDIN.gets.chomp == "y"
 stories_to_delete.map(&:destroy)
 epics = dest_project.epics
 p epics
@@ -41,17 +42,19 @@ epics.each do |epic|
         dest_stories = Story.all(params: {with_label: label, project_id: dest_project.id})
         p dest_stories
 
-        puts "\n----- Processing #{src_stories.select { |s| s.story_type == "feature" }.length} stories for label '#{label}' from #{src_proj.name}: ----"
+        puts "\n----- Processing #{src_stories.select.count} stories for label '#{label}' from #{src_proj.name}: ----"
         src_stories.each do |src_story|
-          if src_story.story_type == "feature" && src_story.current_state != "unscheduled"
-            p src_story
+          #if src_story.current_state != "unscheduled" && src_story.story_type == "feature" || src.current_state != "unscheduled" && ARGV[1] == "-a"
+          if src_story.current_state != "unscheduled" && (src_story.story_type == "feature" || ARGV[0] == "-a")
+            pp src_story
             dest_story = dest_stories.detect { |s| s.name == src_story.name }
-            # puts "Matching: #{dest_story.inspect}"
+
+            #puts "Matching: #{dest_story.inspect}"
             dest_story ||= Story.new(:project_id => dest_project.id)
             dest_story.name = src_story.name
             dest_story.description = src_story.description if src_story.respond_to?(:description)
             dest_story.story_type = src_story.story_type
-            if src_story.respond_to?(:estimate)
+            if src_story.respond_to?(:estimate) && src_story.story_type == "feature"
               dest_story.estimate = src_story.estimate
               dest_story.estimate = 5 if dest_story.estimate == 4 || dest_story.estimate == 6 || dest_story.estimate == 7
               dest_story.estimate = [dest_story.estimate, 8].min
@@ -63,7 +66,8 @@ epics.each do |epic|
             dest_story.external_id = src_story.id.to_s
             dest_story.labels = [{name: label}, {name: src_proj.name}] if dest_story.new?
 
-            puts "Ready to save: #{dest_story.inspect}"
+            puts " ---------------- Ready to save ------------------"
+            pp dest_story
             dest_story.save
           end
         end
@@ -73,3 +77,5 @@ epics.each do |epic|
     end
   end
 end
+
+puts " ** COMPLETE ** "

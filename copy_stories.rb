@@ -59,7 +59,11 @@ epics.each do |epic|
               dest_story.estimate = [dest_story.estimate, 8].min
               dest_story.estimate = [dest_story.estimate, 0].max
             end
-            dest_story.current_state = src_story.current_state
+            if src_story.current_state == "planned"
+              dest_story.current_state = "unstarted"
+            else
+              dest_story.current_state = src_story.current_state
+            end
             dest_story.accepted_at = src_story.accepted_at if dest_story.current_state == "accepted"
             dest_story.integration_id = INTEGRATION_ID
             dest_story.external_id = src_story.id.to_s

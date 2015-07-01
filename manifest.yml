@@ -1,0 +1,7 @@
+applications:
+- name: pivotal-data-aggregator
+  memory: 128MB
+  instances: 1
+  no-route: true
+  path: .
+  command: 'bundle exec clockwork lib/clock.rb'

@@ -11,7 +11,7 @@ time = Benchmark.realtime do
   dest_project = Project.find(PROJECT_ID)
   stories_to_delete = dest_project.stories.reject { |s| s.current_state == "unscheduled" }
   puts "About to delete #{stories_to_delete.length} non-icebox stories from project #{PROJECT_ID}, okay (y/n)?"
-  raise "User aborted" unless STDIN.gets.chomp == "y"
+  #raise "User aborted" unless STDIN.gets.chomp == "y"
   stories_to_delete.map(&:destroy)
   epics = dest_project.epics
   p epics
@@ -83,5 +83,6 @@ time = Benchmark.realtime do
     end
   end
 end
-puts time/1000 + "s"
+
+puts time
 puts " ** COMPLETE ** "
